@@ -1,0 +1,22 @@
+{
+  "name": "pi-smart-seq",
+  "version": "0.1.0",
+  "description": "Per-call ordering for pi's parallel tool batches: bash gets a `wait` flag that makes a call run after earlier calls in the same message.",
+  "keywords": [
+    "pi-package"
+  ],
+  "license": "MIT",
+  "author": "burneikis",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/coordinator.test.ts"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
