@@ -21,8 +21,23 @@ order, before any `execute()` runs. The extension records that order and resolve
 on `tool_execution_end`. A `wait: true` call awaits all earlier pending calls (abortable).
 The "Took" timer is corrected to exclude the wait time.
 
-The coordinator is a `globalThis` singleton (`Symbol.for("pi-smart-seq.coordinator")`), so
-another extension that owns `bash` can reuse it.
+## Extensions that own `bash`
+
+Two extensions cannot both register `bash`. If another extension owns it, that extension
+applies the parameter through the API published on `globalThis` (see `src/api.ts`):
+
+```ts
+pi.on("session_start", () => {
+  const seq = (globalThis as any)[Symbol.for("pi-smart-seq")];
+  if (seq) pi.registerTool(myBashWrapper(seq.decorateTool(createBashToolDefinition(cwd))));
+});
+```
+
+Read it in `session_start`: extensions load in order, so it may not exist at load time.
+If bash is still the built-in, pi-smart-seq replaces it itself on `session_start`.
+If another extension owns bash without the parameter, a warning is shown.
+
+pi-nolo does this; the wait happens after its confirmation prompt.
 
 ## Install
 

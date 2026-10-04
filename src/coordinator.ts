@@ -71,11 +71,3 @@ function untilAborted<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> 
     );
   });
 }
-
-const GLOBAL_KEY = Symbol.for("pi-smart-seq.coordinator");
-
-/** Shared across extensions so another extension that owns `bash` can opt in. */
-export function sharedCoordinator(): CallOrderCoordinator {
-  const store = globalThis as Record<symbol, CallOrderCoordinator | undefined>;
-  return (store[GLOBAL_KEY] ??= new CallOrderCoordinator());
-}
